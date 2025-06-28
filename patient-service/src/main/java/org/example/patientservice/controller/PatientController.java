@@ -57,4 +57,15 @@ public class PatientController {
     ) {
         return ResponseEntity.ok(patientService.updatePatient(id, patientDTO));
     }
+
+    @Operation(
+            summary = "Delete an existing patient",
+            description = "Deletes the information of an existing patient identified by UUID"
+    )
+    @ApiResponse(responseCode = "204", description = "Patient deleted successfully")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePatient(@PathVariable UUID id) {
+        patientService.deletePatient(id);
+        return ResponseEntity.noContent().build();
+    }
 }
