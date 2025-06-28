@@ -3,12 +3,14 @@ package org.example.patientservice.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
+import jakarta.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
 import org.example.patientservice.dto.PatientRequestDTO;
 import org.example.patientservice.dto.PatientResponseDTO;
+import org.example.patientservice.dto.validators.CreatePatientValidationGroup;
 import org.example.patientservice.service.PatientService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,7 +40,7 @@ public class PatientController {
     @ApiResponse(responseCode = "200", description = "Patient created successfully")
     @PostMapping
     public ResponseEntity<PatientResponseDTO> createPatient(
-            @Valid @RequestBody PatientRequestDTO patientDTO
+            @Validated({Default.class, CreatePatientValidationGroup.class}) @RequestBody PatientRequestDTO patientDTO
     ) {
         return ResponseEntity.ok(patientService.createPatient(patientDTO));
     }
@@ -51,7 +53,7 @@ public class PatientController {
     @PutMapping("/{id}")
     public ResponseEntity<PatientResponseDTO> updatePatient(
             @PathVariable UUID id,
-            @Valid @RequestBody PatientRequestDTO patientDTO
+            @Validated({Default.class}) @RequestBody PatientRequestDTO patientDTO
     ) {
         return ResponseEntity.ok(patientService.updatePatient(id, patientDTO));
     }
