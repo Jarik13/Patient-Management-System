@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.patientservice.dto.validators.CreatePatientValidationGroup;
 
 @Data
 @NoArgsConstructor
@@ -49,6 +50,6 @@ public class PatientRequestDTO {
             description = "Date when the patient was registered",
             example = "2024-06-01"
     )
-    @NotNull(message = "Registered date is required")
+    @NotBlank(groups = CreatePatientValidationGroup.class, message = "Registered date is required")
     private String registeredDate;
 }
