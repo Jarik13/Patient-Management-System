@@ -14,6 +14,7 @@ public class KafkaProducer {
     private final KafkaTemplate<String, byte[]> kafkaTemplate;
 
     public void sendEvent(Patient patient) {
+        log.info("Sending Event to Patient {}", patient);
         PatientEvent event = PatientEvent.newBuilder()
                 .setPatientId(patient.getId().toString())
                 .setName(patient.getName())

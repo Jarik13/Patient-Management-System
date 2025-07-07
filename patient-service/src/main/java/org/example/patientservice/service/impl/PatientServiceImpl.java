@@ -6,6 +6,7 @@ import org.example.patientservice.dto.PatientResponseDTO;
 import org.example.patientservice.exception.EmailAlreadyExistsException;
 import org.example.patientservice.exception.PatientNotFoundException;
 import org.example.patientservice.grpc.BillingServiceGrpcClient;
+import org.example.patientservice.kafka.KafkaProducer;
 import org.example.patientservice.mapper.PatientMapper;
 import org.example.patientservice.model.Patient;
 import org.example.patientservice.repository.PatientRepository;
@@ -21,6 +22,7 @@ import java.util.UUID;
 public class PatientServiceImpl implements PatientService {
     private final PatientMapper patientMapper;
     private final PatientRepository patientRepository;
+    private final KafkaProducer kafkaProducer;
     private final BillingServiceGrpcClient billingServiceGrpcClient;
 
     @Override
@@ -37,6 +39,8 @@ public class PatientServiceImpl implements PatientService {
         Patient patient = patientRepository.save(patientMapper.toEntity(patientDTO));
 
         billingServiceGrpcClient.createBillingAccount(patient.getId().toString(), patient.getName(), patient.getEmail());
+        kafkaProducer.sendEvent(patient);
+
         return patientMapper.toDTO(patient);
     }
 
